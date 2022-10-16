@@ -24,14 +24,25 @@ class APIService {
     static _constructUrl(path) {
         return `${this.TMDB_BASE_URL}/${path}?api_key=${atob('NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI=')}`;
     }
+    //fetching movie cast
+    static async fetchActors(movie_id) {
+        const url = APIService._constructUrl(`movie/${movie_id}/credits`)
+        const response = await fetch(url)
+        const data = await response.json()
+        return data.cast
+    }
 }
 
 class HomePage {
     static container = document.getElementById('container');
     static renderMovies(movies) {
+        const movieRow = document.createElement("div");
+        movieRow.classList="row row-cols-5"
         movies.forEach(movie => {
             const movieDiv = document.createElement("div");
+            movieDiv.classList="movieDiv";
             const movieImage = document.createElement("img");
+            movieImage.classList="movieImage"
             movieImage.src = `${movie.backdropUrl}`;
             const movieTitle = document.createElement("h3");
             movieTitle.textContent = `${movie.title}`;
@@ -41,9 +52,11 @@ class HomePage {
 
             movieDiv.appendChild(movieTitle);
             movieDiv.appendChild(movieImage);
-            this.container.appendChild(movieDiv);
+            movieRow.appendChild(movieDiv);
+            this.container.appendChild(movieRow);
         })
     }
+    
 }
 
 
@@ -51,8 +64,10 @@ class Movies {
     static async run(movie) {
         const movieData = await APIService.fetchMovie(movie.id)
         MoviePage.renderMovieSection(movieData);
-        APIService.fetchActors(movieData)
 
+        const movieCredits= await APIService.fetchActors(movieData.id)
+        MoviePage.rendrMovieCast(movieCredits);
+        
     }
 }
 
@@ -60,6 +75,9 @@ class MoviePage {
     static container = document.getElementById('container');
     static renderMovieSection(movie) {
         MovieSection.renderMovie(movie);
+    }
+    static rendrMovieCast(movie) {
+        MovieSection.renderCast(movie);
     }
 }
 
@@ -79,8 +97,27 @@ class MovieSection {
           <p id="movie-overview">${movie.overview}</p>
         </div>
       </div>
-      <h3>Actors:</h3>
+      <h3>Movie Cast:</h3>
     `;
+    }
+    static renderCast(movie) {
+        const actorDiv = document.createElement("div");
+        actorDiv.classList='row gx-3 my-2'
+        movie.forEach(movie => {
+
+            const actorCard= document.createElement('div')
+            actorCard.classList=' col-md-2 col-sm-4 col-6"'
+            const actorImage = document.createElement("img");
+            actorImage.src = `https://image.tmdb.org/t/p/original${movie.profile_path}`;
+            actorImage.classList='img-fluid'
+            const actorName = document.createElement("h6");
+            actorName.textContent = `${movie.name}`;
+            actorCard.appendChild(actorName);
+            actorCard.appendChild(actorImage);
+            actorDiv.appendChild(actorCard);
+            MoviePage.container.appendChild(actorDiv);
+        })
+
     }
 }
 

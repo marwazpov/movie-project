@@ -1,11 +1,39 @@
+#home-page{
+    background-image: url("https://media.istockphoto.com/photos/pop-corn-and-on-red-armchair-cinema-picture-id1271522601?k=20&m=1271522601&s=170667a&w=0&h=L2a4QSIulE5PyABz4DsIUrBhctk7Wj18quOXmzbVTuM=");
+    background-repeat: no-repeat;
+    background-size: cover;
+    color: rgb(247, 203, 58);
+}
+
 #movie-backdrop {
     width: 100%;
 }
 
+#home-page{
+    height: 100vh;
+}
+
 .container {
     padding-top: 32px;
+   
+    /* display: flex;
+    flex-direction: row; */
 }
 
 #actors {
     margin: 24px 16px 0 0;
 }
+
+.movieImage{
+    width: 100%;
+   
+}
+
+.movieDiv{
+    height: calc(100vh/1.9);
+    border: 1px solid rgb(119, 114, 114);
+    margin: 5px;
+    text-align: center;
+    background-color: rgba(230, 228, 228, 0.856);
+}
+
