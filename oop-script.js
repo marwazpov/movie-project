@@ -6,7 +6,11 @@ class App {
     static async run() {
         const movies = await APIService.fetchMovies()
         HomePage.renderMovies(movies);
-    }   
+    }
+    static async runActorsListPage(){
+        const actors = await APIService.fetchActors()
+        ActorsPage.renderAllActors(actors);
+    }
 }
 
 class APIService {
@@ -39,6 +43,7 @@ class APIService {
       const url = APIService._constructUrl(`person/popular`)
       const response = await fetch(url)
       const data = await response.json()
+      console.log(data)
       return data.results
     }
     
@@ -47,7 +52,8 @@ class APIService {
 class HomePage {
     static container = document.getElementById('container');
     static renderMovies(movies) {
-    
+        const link = document.getElementById("actors")
+
         const movieRow = document.createElement("div");
         movieRow.classList="row row-cols-5"
         movies.forEach(movie => {
@@ -61,8 +67,9 @@ class HomePage {
             movieImage.addEventListener("click", function() {
                 homePage.remove();
                 Movies.run(movie);
-                
+                // Actors.run();
             });
+
 
             movieDiv.appendChild(movieTitle);
             movieDiv.appendChild(movieImage);
@@ -82,11 +89,20 @@ class Movies {
         const movieCredits= await APIService.fetchCast(movieData.id)
         MoviePage.rendrMovieCast(movieCredits);
 
-        const allActors = await APIService.fetchActors(movieData)
-        ActorsPage.renderAllActors(allActors)
+        // const allActors = await APIService.fetchActors(movieData)
+        // ActorsPage.renderAllActors(allActors)
         
     }
 }
+
+class Actors {
+    static async run(){
+        const allActors = await APIService.fetchActors()
+        ActorsPage.renderAllActors(allActors)
+    }
+}
+
+
 
 class MoviePage {
     static container = document.getElementById('container');
@@ -144,16 +160,19 @@ class MovieSection {
 class ActorsPage {
     static container = document.getElementById('container');
     static renderAllActors(movie) {
+        // console.log(movie);
         ActorsSection.renderActors(movie);
     }
 }
 
 class ActorsSection{
     static renderActors(actors){
-        const link = document.getElementById("actors")
-         link.addEventListener("click", function() {
-             container.innerHTML = '';
-            //   homePage.remove();
+        
+        // const link = document.getElementById("actors")
+        //  link.addEventListener("click", function() {
+        //      container.innerHTML = '';
+        //     //   homePage.remove();
+        //     console.log(actors);
              const actorsRow = document.createElement('div')
              actorsRow.classList="row row-cols-5"
              actors.forEach((actor)=>{
@@ -173,8 +192,8 @@ class ActorsSection{
                  actorsDiv.appendChild(actorName);
                  actorsRow.appendChild(actorsDiv)
                  ActorsPage.container.appendChild(actorsRow);
-             });
-        });
+            //  });
+         });
     }
 }
 
@@ -221,5 +240,8 @@ class Movie {
         return this.backdropPath ? Movie.BACKDROP_BASE_URL + this.backdropPath : "";
     }
 }
-
+const actorsListButton = document.getElementById('actors').addEventListener('click',()=>{
+MoviePage.container.innerHTML=""
+App.runActorsListPage()
+})
 document.addEventListener("DOMContentLoaded", App.run);
