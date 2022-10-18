@@ -1,6 +1,7 @@
 //the API documentation site https://developers.themoviedb.org/3/
 const container = document.getElementById('container');
 const homePage = document.getElementById("home-page");
+const home = document.getElementById("home");
 
 class App {
     static async run() {
@@ -46,14 +47,21 @@ class APIService {
       console.log(data)
       return data.results
     }
+
+    // fetching single actor
+      static async fetchSingleActor(personId) {
+        const url = APIService._constructUrl(`person/${personId}`)
+        const response = await fetch(url)
+        const data = await response.json()
+        console.log(data)
+        return new SingleActor(data)
+    }
     
 }
 
 class HomePage {
     static container = document.getElementById('container');
     static renderMovies(movies) {
-        const link = document.getElementById("actors")
-
         const movieRow = document.createElement("div");
         movieRow.classList="row row-cols-5"
         movies.forEach(movie => {
@@ -67,7 +75,6 @@ class HomePage {
             movieImage.addEventListener("click", function() {
                 homePage.remove();
                 Movies.run(movie);
-                // Actors.run();
             });
 
 
@@ -88,10 +95,6 @@ class Movies {
 
         const movieCredits= await APIService.fetchCast(movieData.id)
         MoviePage.rendrMovieCast(movieCredits);
-
-        // const allActors = await APIService.fetchActors(movieData)
-        // ActorsPage.renderAllActors(allActors)
-        
     }
 }
 
@@ -167,12 +170,6 @@ class ActorsPage {
 
 class ActorsSection{
     static renderActors(actors){
-        
-        // const link = document.getElementById("actors")
-        //  link.addEventListener("click", function() {
-        //      container.innerHTML = '';
-        //     //   homePage.remove();
-        //     console.log(actors);
              const actorsRow = document.createElement('div')
              actorsRow.classList="row row-cols-5"
              actors.forEach((actor)=>{
@@ -192,7 +189,6 @@ class ActorsSection{
                  actorsDiv.appendChild(actorName);
                  actorsRow.appendChild(actorsDiv)
                  ActorsPage.container.appendChild(actorsRow);
-            //  });
          });
     }
 }
@@ -206,8 +202,6 @@ class SingleActorSection{
     //   }
       
     static renderSingleActor(actor){
-        console.log(actor);
-        console.log("it works")
             const singleActorDiv = document.createElement('div')
             const singleActorImage= document.createElement("img")
             singleActorImage.src = `https://image.tmdb.org/t/p/original/${actor.profile_path}`
@@ -241,7 +235,14 @@ class Movie {
     }
 }
 const actorsListButton = document.getElementById('actors').addEventListener('click',()=>{
+homePage.remove();
 MoviePage.container.innerHTML=""
 App.runActorsListPage()
 })
+
+const moviesButton = home.addEventListener('click', ()=>{
+    MoviePage.container.innerHTML=""
+    App.run();
+})
+
 document.addEventListener("DOMContentLoaded", App.run);
