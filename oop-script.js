@@ -12,9 +12,18 @@ class App {
         const actors = await APIService.fetchActors()
         ActorsPage.renderAllActors(actors);
     }
+    static async runSingleActorsPage(){
+        const actor = await APIService.fetchSingleActor()
+        console.log('app run', actor)
+        SingleActorsPage.renderSingleActors(actor);
+    }
 }
 
 class APIService {
+    static _constructUrl(path) {
+        return `${this.TMDB_BASE_URL}/${path}?api_key=${atob('NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI=')}`;
+    }
+
     static TMDB_BASE_URL = 'https://api.themoviedb.org/3';
     static async fetchMovies() {
         const url = APIService._constructUrl(`movie/now_playing`)
@@ -28,9 +37,7 @@ class APIService {
         const data = await response.json()
         return new Movie(data)
     }
-    static _constructUrl(path) {
-        return `${this.TMDB_BASE_URL}/${path}?api_key=${atob('NTQyMDAzOTE4NzY5ZGY1MDA4M2ExM2M0MTViYmM2MDI=')}`;
-    }
+    
     //fetching movie cast
     static async fetchCast(movie_id) {
         const url = APIService._constructUrl(`movie/${movie_id}/credits`)
@@ -44,7 +51,6 @@ class APIService {
       const url = APIService._constructUrl(`person/popular`)
       const response = await fetch(url)
       const data = await response.json()
-      console.log(data)
       return data.results
     }
 
@@ -53,8 +59,7 @@ class APIService {
         const url = APIService._constructUrl(`person/${personId}`)
         const response = await fetch(url)
         const data = await response.json()
-        console.log(data)
-        return new SingleActor(data)
+        return data
     }
     
 }
@@ -99,10 +104,14 @@ class Movies {
 }
 
 class Actors {
-    static async run(){
+    static async run(actors){
         const allActors = await APIService.fetchActors()
-        ActorsPage.renderAllActors(allActors)
-    }
+        ActorsPage.renderAllActors(allActors);
+
+        const singleActors = await APIService.fetchSingleActor(actors.id)
+        console.log(singleActors)
+        SingleActorsSection.renderSingleActors(singleActors); 
+    }     
 }
 
 
@@ -162,59 +171,62 @@ class MovieSection {
 
 class ActorsPage {
     static container = document.getElementById('container');
-    static renderAllActors(movie) {
-        // console.log(movie);
-        ActorsSection.renderActors(movie);
+    static renderAllActors(actors) {
+        ActorsSection.renderActors(actors);
+    }
+}
+
+class SingleActorsPage{
+    static container = document.getElementById('container');
+    static renderSingleActors(actor) {
+        SingleActorsSection.renderSingleActors(actor);
     }
 }
 
 class ActorsSection{
-    static renderActors(actors){
+    static renderActors(people){
              const actorsRow = document.createElement('div')
              actorsRow.classList="row row-cols-5"
-             actors.forEach((actor)=>{
+             people.forEach((person)=>{
                  const actorsDiv = document.createElement('div')
                  actorsDiv.classList="col-md-2 col-sm-4 col-6 m-4 actorsDiv"
                  const actorImage= document.createElement("img")
-                 actorImage.src = `https://image.tmdb.org/t/p/original/${actor.profile_path}`
+                 actorImage.src = `https://image.tmdb.org/t/p/original/${person.profile_path}`
                  actorImage.classList="img-fluid"
-                 actorImage.addEventListener('click', function(){
-                    container.innerHTML = ''
-                    SingleActorSection.renderSingleActor(actor)
-                 })
                  const actorName = document.createElement('h3')
-                 actorName.textContent = `${actor.name}`
+                 actorName.textContent = `${person.name}`
                  actorName.setAttribute('class', 'text-center')
                  actorsDiv.appendChild(actorImage);
                  actorsDiv.appendChild(actorName);
                  actorsRow.appendChild(actorsDiv)
                  ActorsPage.container.appendChild(actorsRow);
+                 actorImage.addEventListener('click',()=>{
+                    Actors.run(person)
+                 })
          });
     }
 }
 
-class SingleActorSection{
-    // static async fetchSingleActor(){
-    //     const url = `https://api.themoviedb.org/3/person/${person_id}?api_key=542003918769df50083a13c415bbc602`
-    //     const response = await fetch(url)
-    //     const data = await response.json()
-    //     console.log(data)
-    //   }
-      
-    static renderSingleActor(actor){
-            const singleActorDiv = document.createElement('div')
-            const singleActorImage= document.createElement("img")
-            singleActorImage.src = `https://image.tmdb.org/t/p/original/${actor.profile_path}`
-            singleActorImage.classList="img-fluid"
-            const singleActorName = document.createElement('h3')
-            singleActorName.textContent = `${actor.name}`
-            const singleActorAge = document.createElement('h3')
-            singleActorAge.textContent = `${actor.age}`
-            singleActorName.setAttribute('class', 'text-center')
-            singleActorDiv.appendChild(singleActorImage);
-            singleActorDiv.appendChild(singleActorName);
-            singleActorDiv.appendChild(singleActorAge);
-            ActorsPage.container.appendChild(singleActorDiv);
+class SingleActorsSection{
+    static renderSingleActors(actor){
+        console.log(actor)
+        const image = `https://image.tmdb.org/t/p/original/${actor.profile_path}`
+        ActorsPage.container.innerHTML=""
+        SingleActorsPage.container.innerHTML=`
+        <div class="row">
+
+        <div class='col-6'>
+        <h2>${actor.name}<h2>
+        <h3>${actor.birthday} | ${actor.place_of_birth} </h3> 
+        <p>${actor.biography}</p>
+        </div>
+        
+        <div class='col-6'> 
+        <img class='img-fluid' src=${image} />
+        </div>
+       
+        </div>
+        `
     }
 }
 
@@ -230,10 +242,11 @@ class Movie {
         this.backdropPath = json.backdrop_path;
     }
 
-    get backdropUrl() {
+get backdropUrl() {
         return this.backdropPath ? Movie.BACKDROP_BASE_URL + this.backdropPath : "";
     }
 }
+
 const actorsListButton = document.getElementById('actors').addEventListener('click',()=>{
 homePage.remove();
 MoviePage.container.innerHTML=""
@@ -244,5 +257,6 @@ const moviesButton = home.addEventListener('click', ()=>{
     MoviePage.container.innerHTML=""
     App.run();
 })
+
 
 document.addEventListener("DOMContentLoaded", App.run);
