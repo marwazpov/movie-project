@@ -5,6 +5,12 @@
     color: rgb(247, 203, 58);
 }
 
+
+.navbar-brand img{
+    height:70px;
+    width:70px;
+}
+
 #movie-backdrop {
     width: 100%;
 }
@@ -42,7 +48,7 @@
     display: flex;
 }
 
-.actorsDiv>img{
+/* .actorsDiv>img{
     width: auto;
     height: auto;
-}
+} */
