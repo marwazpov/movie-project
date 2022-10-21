@@ -36,10 +36,102 @@
               Movie Genres
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="
+                  App.runMovieGenres(28)"
+                  >Action</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(12)"
+                  >Adventure</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(16)"
+                  >Animation</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(35)"
+                  >Comedy</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(80)"
+                  >Crime</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(99)"
+                  >Documentary</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(18)"
+                  >Drama</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(10751)"
+                  >Family</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(14)"
+                  >Fantasy</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(36)"
+                  >History</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(27)"
+                  >Horror</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(10432)"
+                  >Music</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(9648)"
+                  >Mystery</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(10749)"
+                  >Romance</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(878)"
+                  >Sci-Fi</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(53)"
+                  >Thriller</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(10770)"
+                  >TV Movie</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(10752)"
+                  >War</a
+                >
+              </li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runMovieGenres(37)"
+                  >Western</a
+                >
+              </li>
             </ul>
           </li>
           <li class="nav-item dropdown">
@@ -47,17 +139,42 @@
               Filter
             </a>
             <ul class="dropdown-menu">
-              <li><a class="dropdown-item" href="#">Action</a></li>
-              <li><a class="dropdown-item" href="#">Another action</a></li>
-              <li><hr class="dropdown-divider"></li>
-              <li><a class="dropdown-item" href="#">Something else here</a></li>
+              <li>
+                <a class="dropdown-item" href="#" onclick="App.runFilter('popular')"
+                  >Popular</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  onclick="App.runFilter('top_rated')"
+                  >Top Rated</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  onclick="App.runFilter('now_playing')"
+                  >Now Playing</a
+                >
+              </li>
+              <li>
+                <a
+                  class="dropdown-item"
+                  href="#"
+                  onclick="App.runFilter('upcoming')"
+                  >Up Coming</a
+                >
+              </li>
             </ul>
           </li>
           <li class="nav-item">
             <a class="nav-link">About</a>
           </li>
         </ul>
-        <form class="d-flex" id= 'form' role="search">
+        <form class="d-flex" id= 'form' role="search"  onsubmit="App.runMovieSearch()">
           <input class="form-control me-2" type="search" placeholder="search" id='searchedMovie' aria-label="Search">
           <button class="btn btn-outline-success" id="searchMovie" type="submit">Search</button>
         </form>

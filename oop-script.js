@@ -14,9 +14,25 @@ class App {
     }
     static async runSingleActorsPage(){
         const actor = await APIService.fetchSingleActor()
-        console.log('app run', actor)
         SingleActorsPage.renderSingleActors(actor);
     }
+
+    static async runMovieGenres(genreId){
+        const genre = await APIService.fethcingMovieGenres(genreId)
+        GenresPage.renderGenres(genre);
+    }
+
+    static async runMovieSearch(){
+        const value = document.getElementById("searchedMovie").value;
+        const search = await APIService.fethcingSearchedMovies(value)
+        MovieSearchPage.renderMovieSearch(search);
+    }
+
+    static async runFilter(input){
+        const filteredMovies = await APIService.fethcingFilteredMovies(input)
+        MovieSearchPage.renderMovieSearch(filteredMovies);
+    }
+
 }
 
 class APIService {
@@ -62,27 +78,53 @@ class APIService {
         return data
     }
     
+    // fetching movie genres
+    static async fethcingMovieGenres(genreId) {
+        const response = await fetch(`https://api.themoviedb.org/3/discover/movie?api_key=bae5a03c227c33b8d9842f4e6c132889&include_adult=false&with_genres=${genreId}`);
+        const data = await response.json()
+        return data.results
+    }
+
+    // fetching searched movies
+    static async fethcingSearchedMovies(searchedMovie) {
+        const url =`https://api.themoviedb.org/3/search/person?api_key=bae5a03c227c33b8d9842f4e6c132889&query=${searchedMovie}`
+        const response = await fetch(url)
+        const data = await response.json()
+        return data.results
+    }
+    // fetching filtered movies
+    static async fethcingFilteredMovies(filter) {
+        const url = APIService._constructUrl(`movie/${filter}`)
+        const response = await fetch(url)
+        const data = await response.json()
+        return data.results
+    }
 }
 
 class HomePage {
     static container = document.getElementById('container');
     static renderMovies(movies) {
+
         const movieRow = document.createElement("div");
-        movieRow.classList="row row-cols-5"
+        movieRow.classList="row row-cols-5 d-flex justify-content-around"
+      
         movies.forEach(movie => {
+           
             const movieDiv = document.createElement("div");
             movieDiv.classList="movieDiv";
             const movieImage = document.createElement("img");
-            movieImage.classList="movieImage"
-            movieImage.src = `${movie.backdropUrl}`;
+            movieImage.classList="movieImage img-fluid"
+            if ('backdropUrl' in movie){
+                movieImage.src = `http://image.tmdb.org/t/p/w780/${movie.backdropUrl}`;
+            } else {movieImage.src = `http://image.tmdb.org/t/p/w780/${movie.backdrop_path}`;}
+           
+        
             const movieTitle = document.createElement("h3");
             movieTitle.textContent = `${movie.title}`;
             movieImage.addEventListener("click", function() {
                 homePage.remove();
                 Movies.run(movie);
             });
-
-
             movieDiv.appendChild(movieTitle);
             movieDiv.appendChild(movieImage);
             movieRow.appendChild(movieDiv);
@@ -109,7 +151,6 @@ class Actors {
         ActorsPage.renderAllActors(allActors);
 
         const singleActors = await APIService.fetchSingleActor(actors.id)
-        console.log(singleActors)
         SingleActorsSection.renderSingleActors(singleActors); 
     }     
 }
@@ -130,7 +171,7 @@ class MovieSection {
     static renderMovie(movie) {
         MoviePage.container.innerHTML = `
       <div class="row">
-        <div class="col-md-4">
+        <div class="col-md-5">
           <img id="movie-backdrop" src=${movie.backdropUrl}> 
         </div>
         <div class="col-md-8">
@@ -183,16 +224,36 @@ class SingleActorsPage{
     }
 }
 
+class GenresPage{
+    static container = document.getElementById('container');
+    static renderGenres(genres) {
+        homePage.remove();
+        MoviePage.container.innerHTML=""
+        HomePage.renderMovies(genres)
+    }
+}
+
+class  MovieSearchPage{
+    static container = document.getElementById('container');
+    static renderMovieSearch(search) {
+        homePage.remove();
+        MoviePage.container.innerHTML=""
+        HomePage.renderMovies(search)
+    }
+}
+
+
+
 class ActorsSection{
     static renderActors(people){
              const actorsRow = document.createElement('div')
-             actorsRow.classList="row row-cols-5"
+             actorsRow.classList="row row-cols-5 d-flex justify-content-around"
              people.forEach((person)=>{
                  const actorsDiv = document.createElement('div')
                  actorsDiv.classList="col-md-2 col-sm-4 col-6 m-4 actorsDiv"
                  const actorImage= document.createElement("img")
                  actorImage.src = `https://image.tmdb.org/t/p/original/${person.profile_path}`
-                 actorImage.classList="img-fluid"
+                 actorImage.classList="img-fluid allActors"
                  const actorName = document.createElement('h3')
                  actorName.textContent = `${person.name}`
                  actorName.setAttribute('class', 'text-center')
@@ -222,7 +283,7 @@ class SingleActorsSection{
         </div>
         
         <div class='col-6'> 
-        <img class='img-fluid' src=${image} />
+        <img class='img-fluid'  src=${image} />
         </div>
        
         </div>
