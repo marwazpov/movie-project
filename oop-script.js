@@ -59,6 +59,7 @@ class APIService {
         const url = APIService._constructUrl(`movie/${movie_id}/credits`)
         const response = await fetch(url)
         const data = await response.json()
+        console.log(data)
         return data.cast
     }
 
@@ -99,6 +100,14 @@ class APIService {
         const data = await response.json()
         return data.results
     }
+
+    //fethcing trailers
+    static async fetchTrailer(movie_id){
+        const url = APIService._constructUrl(`movie/${movie_id}/videos`)
+        const response = await fetch(url)
+        const data = await response.json()
+        return data.results
+    }
 }
 
 class HomePage {
@@ -117,16 +126,18 @@ class HomePage {
             if ('backdropUrl' in movie){
                 movieImage.src = `http://image.tmdb.org/t/p/w780/${movie.backdropUrl}`;
             } else {movieImage.src = `http://image.tmdb.org/t/p/w780/${movie.backdrop_path}`;}
-           
         
             const movieTitle = document.createElement("h3");
             movieTitle.textContent = `${movie.title}`;
-            movieImage.addEventListener("click", function() {
+            movieDiv.addEventListener("click", ()=>{
                 homePage.remove();
                 Movies.run(movie);
             });
+            const movieRating = document.createElement("span");
+            movieRating.textContent = `Rating: ${movie.voteAverage}`
             movieDiv.appendChild(movieTitle);
             movieDiv.appendChild(movieImage);
+            movieDiv.appendChild(movieRating);
             movieRow.appendChild(movieDiv);
             this.container.appendChild(movieRow);
         })
@@ -142,6 +153,10 @@ class Movies {
 
         const movieCredits= await APIService.fetchCast(movieData.id)
         MoviePage.rendrMovieCast(movieCredits);
+
+        const movieTrailer =await APIService.fetchTrailer(movieData.id)
+        MoviePage.renderMovieTrailer(movieTrailer);
+        
     }
 }
 
@@ -165,20 +180,26 @@ class MoviePage {
     static rendrMovieCast(movie) {
         MovieSection.renderCast(movie);
     }
+
+    static renderMovieTrailer(movie){
+        MovieSection.renderTrailer(movie);
+
+    }
+
 }
 
 class MovieSection {
     static renderMovie(movie) {
         MoviePage.container.innerHTML = `
       <div class="row">
-        <div class="col-md-5">
+        <div class="col-md-6">
           <img id="movie-backdrop" src=${movie.backdropUrl}> 
         </div>
-        <div class="col-md-8">
+        <div class="col-md-6">
           <h2 id="movie-title">${movie.title}</h2>
           <p id="genres">${movie.genres}</p>
-          <p id="movie-release-date">${movie.releaseDate}</p>
-          <p id="movie-runtime">${movie.runtime}</p>
+          <p id="movie-release-date"> Release Date: ${movie.releaseDate}</p>
+          <p id="movie-runtime"> Run Time: ${movie.runtime}</p>
           <h3>Overview:</h3>
           <p id="movie-overview">${movie.overview}</p>
         </div>
@@ -206,7 +227,28 @@ class MovieSection {
             MoviePage.container.appendChild(actorDiv);
         })
 
+        
     }
+
+    static renderTrailer(movies){
+         const videos = movies.slice(0,1)
+         videos.forEach(movie => {
+            const videoDiv = document.createElement("div");
+            videoDiv.classList="trailerDiv row align-items-center container-fluid ";
+            const header= document.createElement('h3');
+            header.innerHTML='Trailer';
+            header.classList='text-center';
+            const trailer=document.createElement('iframe');
+            trailer.width='300';
+            trailer.height='550';
+            trailer.innerHTML=`${movie.id}`;
+            trailer.src = `https://www.youtube.com/embed/${movie.key}`;
+            videoDiv.appendChild(header);
+            videoDiv.appendChild(trailer);
+            MoviePage.container.appendChild(videoDiv);
+        })
+    }
+
 }
 
 
@@ -240,7 +282,11 @@ class  MovieSearchPage{
         MoviePage.container.innerHTML=""
         HomePage.renderMovies(search)
     }
+
+    
 }
+
+
 
 
 
