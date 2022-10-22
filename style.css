@@ -20,6 +20,10 @@ body{
     margin: 8px;
 }
 
+#movieDiv{
+    white-space: pre-line;
+}
+
 
 .navbar-brand img{
     height:50px;
@@ -53,14 +57,13 @@ footer{
 #home-page>h3{
     font-size:50px;
     margin: 40px;
-    padding: 20px;
     animation: slide-out 3s; 
 }
 #home-page>p{
     font-size:30px;
     margin: 40px;
-    padding: 20px;
     animation: slide-out 4s; 
+    white-space: pre-line;
 }
 
 @keyframes slide-out {
@@ -70,9 +73,6 @@ footer{
 
 .container {
     padding-top: 32px;
-   
-    /* display: flex;
-    flex-direction: row; */
 }
 
 .movieImage{

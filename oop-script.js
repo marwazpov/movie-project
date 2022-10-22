@@ -119,8 +119,7 @@ class HomePage {
         movies.forEach(movie => {   
             const movieDiv = document.createElement("div");
             const ratingButton= document.createElement('button');
-            const progressDiv= document.createElement('div');
-            
+            movieDiv.id='movieDiv'
             movieDiv.classList="movieDiv";
             const movieImage = document.createElement("img");
             movieImage.classList="movieImage img-fluid"
