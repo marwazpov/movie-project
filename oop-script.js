@@ -45,7 +45,7 @@ class APIService {
         const url = APIService._constructUrl(`movie/now_playing`)
         const response = await fetch(url)
         const data = await response.json()
-        return data.results.map(movie => new Movie(movie))
+        return data.results
     }
     static async fetchMovie(movieId) {
         const url = APIService._constructUrl(`movie/${movieId}`)
@@ -88,7 +88,7 @@ class APIService {
 
     // fetching searched movies
     static async fethcingSearchedMovies(searchedMovie) {
-        const url =`https://api.themoviedb.org/3/search/person?api_key=bae5a03c227c33b8d9842f4e6c132889&query=${searchedMovie}`
+        const url =`https://api.themoviedb.org/3/search/movie?api_key=bae5a03c227c33b8d9842f4e6c132889&query=${searchedMovie}`
         const response = await fetch(url)
         const data = await response.json()
         return data.results
@@ -113,13 +113,14 @@ class APIService {
 class HomePage {
     static container = document.getElementById('container');
     static renderMovies(movies) {
-
         const movieRow = document.createElement("div");
-        movieRow.classList="row row-cols-5 d-flex justify-content-around"
-      
-        movies.forEach(movie => {
-           
+        movieRow.classList="row row-cols-3 d-flex justify-content-around"
+        console.log(movies)
+        movies.forEach(movie => {   
             const movieDiv = document.createElement("div");
+            const ratingButton= document.createElement('button');
+            const progressDiv= document.createElement('div');
+            
             movieDiv.classList="movieDiv";
             const movieImage = document.createElement("img");
             movieImage.classList="movieImage img-fluid"
@@ -133,11 +134,15 @@ class HomePage {
                 homePage.remove();
                 Movies.run(movie);
             });
-            const movieRating = document.createElement("span");
-            movieRating.textContent = `Rating: ${movie.voteAverage}`
+    
+            ratingButton.textContent = `Rating: ${movie.vote_average}`
+            ratingButton.id = "ratingButton"
+            ratingButton.classList = 'ratingButton btn btn-outline-light p-3'
+        
             movieDiv.appendChild(movieTitle);
             movieDiv.appendChild(movieImage);
-            movieDiv.appendChild(movieRating);
+            movieDiv.appendChild(ratingButton);
+    
             movieRow.appendChild(movieDiv);
             this.container.appendChild(movieRow);
         })
@@ -197,7 +202,6 @@ class MovieSection {
         </div>
         <div class="col-md-6">
           <h2 id="movie-title">${movie.title}</h2>
-          <p id="genres">${movie.genres}</p>
           <p id="movie-release-date"> Release Date: ${movie.releaseDate}</p>
           <p id="movie-runtime"> Run Time: ${movie.runtime}</p>
           <h3>Overview:</h3>
@@ -363,6 +367,27 @@ App.runActorsListPage()
 const moviesButton = home.addEventListener('click', ()=>{
     MoviePage.container.innerHTML=""
     App.run();
+})
+
+let isBlack = false;
+ document.getElementById("modeButton").addEventListener("click", ()=>{
+    if(isBlack){
+                document.body.style.background= "white";
+                document.body.style.color="black"
+                document.getElementById('nav').classList='navbar navbar-expand-lg bg-light fixed-top'
+                document.getElementById("modeButton").classList='btn btn-outline-info'
+                document.getElementsByClassName("ratingButton").classList='ratingButton btn btn-outline-info p-3'
+                document.getElementById("modeButton").innerHTML=' Mode Switch <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16"><path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>'
+            } 
+            else{
+                document.body.style.background= "black";
+                document.body.style.color="white"
+                document.getElementById('nav').classList='navbar navbar-expand-lg  navbar-dark bg-dark fixed-top'
+                document.getElementById("modeButton").classList='btn btn-outline-light'
+                document.getElementsByClassName("ratingButton").classList='ratingButton btn btn-outline-danger p-3'
+                document.getElementById("modeButton").innerHTML=' Mode Switch <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-off" viewBox="0 0 16 16"> <path d="M11 4a4 4 0 0 1 0 8H8a4.992 4.992 0 0 0 2-4 4.992 4.992 0 0 0-2-4h3zm-6 8a4 4 0 1 1 0-8 4 4 0 0 1 0 8zM0 8a5 5 0 0 0 5 5h6a5 5 0 0 0 0-10H5a5 5 0 0 0-5 5z"/></svg>'
+            }
+            isBlack = !isBlack
 })
 
 

@@ -9,6 +9,7 @@
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-gH2yIJqKdNHPEq0n4Mqa/HGKIhSkIHeL5AyhkYV8i59U5AR6csBvApHHNl/vI1Bx" crossorigin="anonymous">
 
     <script src="https://kit.fontawesome.com/2ea375a321.js" crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.9.1/font/bootstrap-icons.css">
 
     <link rel="stylesheet" href="style.css">
 
@@ -17,7 +18,7 @@
 </head>
 
 <body>
-  <nav class="navbar navbar-expand-lg bg-light">
+  <nav  id='nav' id="navbar" class="navbar navbar-expand-lg bg-light fixed-top">
     <div class="container-fluid">
       <a class="navbar-brand"  href="https://www.themoviedb.org/" target="_blank"><img src="https://upload.wikimedia.org/wikipedia/commons/thumb/8/89/Tmdb.new.logo.svg/1200px-Tmdb.new.logo.svg.png"></a>
       <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
@@ -174,8 +175,11 @@
             <a class="nav-link">About</a>
           </li>
         </ul>
+        <button type="button" id="modeButton" class="btn btn-outline-info me-2">Mode Switch 
+          <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-toggle-on" viewBox="0 0 16 16"><path d="M5 3a5 5 0 0 0 0 10h6a5 5 0 0 0 0-10H5zm6 9a4 4 0 1 1 0-8 4 4 0 0 1 0 8z"/></svg>
+        </button>
         <form class="d-flex" id= 'form' role="search"  onsubmit="App.runMovieSearch()">
-          <input class="form-control me-2" type="search" placeholder="search" id='searchedMovie' aria-label="Search">
+          <input class="form-control me-2" type="search" placeholder="search movies..." id='searchedMovie' aria-label="Search">
           <button class="btn btn-outline-success" id="searchMovie" type="submit">Search</button>
         </form>
       </div>
@@ -192,24 +196,29 @@
 
     </div>
 
-    <footer>
-      <div class="row text-center p-4">
-          <h2>This website was create by</h2>
+    
+    <footer id="footer">
+      <div class="container d-flex justify-content-center py-5 flex-column align-items-center" >
+        <div > 
+          <h4> Let's connect </h4>
+        </div>
+        
+        <div>
+          <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+            <a href="https://github.com/marwazpov" target="_blank"><i class="fa fa-github" aria-hidden="true"></i></a> 
+           </button>
+           <button type="button" class="btn btn-primary btn-lg btn-floating mx-2" style="background-color: #54456b;">
+              <a href="https://www.linkedin.com/in/marwa-salameh/" target="_blank"><i class="fa fa-linkedin" aria-hidden="true"></i></a>
+           </button>
+        </div>
+        
       </div>
-
-          <div class="col-lg-4">Marwa Salameh
-              <i class="fa fa-github" aria-hidden="true"></i>
-  
-          </div>
-          
-      </div>
-  
-  </footer>
+    </footer>
 
     <script src="./oop-script.js"></script>
     <!-- <script type="text/javascript" src="script.js"></script> -->
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js" integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa" crossorigin="anonymous"></script>
-
+    
 </body>
 
 
