@@ -23,7 +23,8 @@ class App {
         GenresPage.renderGenres(genre);
     }
 
-    static async runMovieSearch(){
+    static async runMovieSearch(e){
+       
         const value = document.getElementById("searchedMovie").value;
         const search = await APIService.fethcingSearchedMovies(value)
         MovieSearchPage.renderMovieSearch(search);
@@ -367,7 +368,12 @@ const moviesButton = home.addEventListener('click', ()=>{
     MoviePage.container.innerHTML=""
     App.run();
 })
-
+const element = document.querySelector('form');
+element.addEventListener('submit', event => {
+  event.preventDefault();
+  App.runMovieSearch()
+  console.log('Form submission cancelled.');
+});
 const aboutButton = about.addEventListener('click', ()=>{
     homePage.remove();
     container.innerHTML=`
