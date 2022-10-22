@@ -2,6 +2,7 @@
 const container = document.getElementById('container');
 const homePage = document.getElementById("home-page");
 const home = document.getElementById("home");
+const about = document.getElementById("about");
 
 class App {
     static async run() {
@@ -32,7 +33,6 @@ class App {
         const filteredMovies = await APIService.fethcingFilteredMovies(input)
         MovieSearchPage.renderMovieSearch(filteredMovies);
     }
-
 }
 
 class APIService {
@@ -367,6 +367,30 @@ App.runActorsListPage()
 const moviesButton = home.addEventListener('click', ()=>{
     MoviePage.container.innerHTML=""
     App.run();
+})
+
+const aboutButton = about.addEventListener('click', ()=>{
+    homePage.remove();
+    container.innerHTML=`
+    <div class="text-center p-2">
+    <h1>Website Content</h1>
+    <h2>Home Page</h2>
+    <p>Displays movies now playing as a default</p>
+    <p>You can use <strong>Filter dropdown </strong> to filter movies according to popular, top rated, now playing and upcoming movies</p>
+    <p>You can also use <strong> Movie Genres</strong> to filter movies acording the genres you like </p>
+    <h2>Single Movie Page</h2>
+    <p>Clicking on movie card will display the selected movie details including:</P>
+    <p>Title, release date, run time, overview, main cast and a trailer</p>
+    <h2>Actors Page</h2>
+    <p>Displays the popular actors</p>
+    <p>Each actor card takes you to single actor page when clicked</p>
+    <h2>Search Bar</h2>
+    <p>Takes the given input and displays all matching movies</p>
+    <h2>Mode Switch</h2>
+    <p>Toggles websites between light and dark mode</p>
+    </div>
+
+    `
 })
 
 let isBlack = false;
